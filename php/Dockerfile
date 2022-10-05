@@ -85,7 +85,7 @@ RUN apk add --no-cache zlib fontconfig libx11 libxext libxrender sqlite
 RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev
 RUN pear config-set php_bin /usr/local/bin/php
 RUN pear install php_codesniffer
-WORKDIR $HOME/manam_post
+WORKDIR $HOME/project_test
 
 # Implementations for crontab
 RUN apk add --update --no-cache libcap && \
@@ -93,7 +93,7 @@ RUN apk add --update --no-cache libcap && \
 USER app
 RUN mkdir /home/app/crontabs \
         && echo 'SHELL=/bin/sh' > /home/app/crontabs/app \
-    && echo "* * * * * /usr/local/bin/php /home/app/manam_post/artisan schedule:run >> /dev/null 2>&1" >> /home/app/crontabs/app
+    && echo "* * * * * /usr/local/bin/php /home/app/project_test/artisan schedule:run >> /dev/null 2>&1" >> /home/app/crontabs/app
 RUN crond service as foreground mode
 USER root
 RUN /usr/bin/crontab /home/app/crontabs/app
