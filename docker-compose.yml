@@ -1,0 +1,80 @@
+version: '3.3'
+
+services:
+  php_project_test:
+    container_name: project_test_php
+    build:
+      context: ./php
+    restart: always
+    volumes:
+      - ./project_test:/home/app/project_test:Z
+      - ./provision.sh:/home/app/provision.sh
+      - ./startup.sh:/home/app/startup.sh
+      - ./check.sh:/home/app/check.sh
+      - ./supervisor:/etc/supervisor.d
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - ./php/php.ini-development:/usr/local/etc/php/php.ini-development
+    links:
+      - db_project_test
+      - redis_project_test
+
+  nginx_project_test:
+    container_name: project_test_nginx
+    build:
+      context: ./nginx
+    restart: always
+    volumes:
+      - ./project_test:/home/app/project_test
+    links:
+      - php_project_test
+    ports:
+      - 11000:80
+  #    - 443:443
+
+  sqlite3:
+    container_name: project_test_sqlite
+    image: nouchka/sqlite3:latest
+    restart: always
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./project_test:/home/app/project_test/database
+
+  db_project_test:
+    image: mariadb:10.6
+    restart: always
+    container_name: project_test_db
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+#      - ./db-init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=project_test
+      - MYSQL_DATABASE=project_test
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=project_test
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: project_test_phpmyadmin
+    restart: always
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db_project_test
+      - PMA_PORT=3306
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
+    links:
+      - db_project_test
+
+  redis_project_test:
+    image: redis:alpine
+    container_name: project_test_redis
+
+volumes:
+  pgsqldata:
+  composer-cache:
