@@ -49,10 +49,8 @@ services:
       - ./mysql/data:/var/lib/mysql
 #      - ./db-init:/docker-entrypoint-initdb.d
     environment:
-      - MYSQL_ROOT_PASSWORD=project_test
+      - MYSQL_ROOT_PASSWORD=secret
       - MYSQL_DATABASE=project_test
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=project_test
     ports:
       - 3306:3306
 
