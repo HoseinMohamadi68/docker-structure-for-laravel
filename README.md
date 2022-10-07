@@ -61,13 +61,12 @@ This project contain the following containers.
 | phpmyadmin | [https://hub.docker.com/_/phpmyadmin][PlMe] |
 | redis | [https://hub.docker.com/_/redis][PlGa] |
 
-#### how to go shall
+#### how to go shell
 
-For go to shall and use Enviroment composer you can Enter following command:
+For go to shell and use Enviroment composer you can Enter following command:
 
 ```sh
-make shall
+make shell
 ```
 
 ## License
-mohamadi.hosein68@gmail.com
